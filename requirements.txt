@@ -1,2 +1,2 @@
-pyTeleBot==4.14.0
-aiosqlite==0.20.0
+pyTeleBot
+aiosqlite

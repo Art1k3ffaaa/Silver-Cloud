@@ -3,7 +3,7 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from db_main_bot import db
 # ==================== НАСТРОЙКИ ====================
-BOT_TOKEN = os.getenv('8316568148:AAHAeGcxY9ttW3MpjVMZP8URh__2YkJI87M')
+BOT_TOKEN = os.getenv('BOT_TOKEN') or '8316568148:AAHAeGcxY9ttW3MpjVMZP8URh__2YkJI87M'
 
 # ==================== ЯЗЫКИ ====================
 LANGUAGES = {

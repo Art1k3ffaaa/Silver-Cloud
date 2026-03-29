@@ -7,7 +7,13 @@ import urllib.request
 import shutil
 from pathlib import Path
 
-DB_PATH = "/app/telegram_bot.db" if os.path.exists("/app") else "telegram_bot.db"
+# БД должна быть на Volume в /app/data
+if os.path.exists("/app/data"):
+    os.makedirs("/app/data", exist_ok=True)
+    DB_PATH = "/app/data/telegram_bot.db"
+else:
+    DB_PATH = "telegram_bot.db"
+
 GITHUB_RAW_URL = "https://raw.githubusercontent.com/Art1k3ffaaa/Silver-Cloud/main/telegram_bot.db"
 LOCAL_BACKUP = "telegram_bot.db"  # локальная копия для разработки
 

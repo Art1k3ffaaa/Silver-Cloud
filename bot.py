@@ -2,9 +2,11 @@ import os
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-# Восстанавливаем БД перед инициализацией
-from restore_db import restore_database
-restore_database()
+try:
+    from restore_db import restore_database
+    restore_database()
+except Exception as e:
+    print(f"⚠️ Ошибка восстановления БД: {e}")
 
 from db_main_bot import db
 # ==================== НАСТРОЙКИ ====================

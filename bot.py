@@ -1257,9 +1257,13 @@ def admin_customer_detail(call):
     # Рассчитываем общую сумму всех заказов
     total_amount = 0
     for order in confirmed_orders:
-        product_price = order['quantity'] * PRICES.get(order.get('product_id', 'snus1'), 8)
-        delivery_price = extract_delivery_price_from_text(order['place'])
-        total_amount += product_price + delivery_price
+        order_total = order.get('total_price', 0)
+        if order_total == 0:
+            # Для старых заказов, если total_price не сохранен
+            product_price = order['quantity'] * PRICES.get(order.get('product_id', 'snus1'), 8)
+            delivery_price = extract_delivery_price_from_text(order['place'])
+            order_total = product_price + delivery_price
+        total_amount += order_total
     
     # Формируем информацию о клиенте
     display_name = customer.get('first_name') or customer.get('username') or "Без имени"
@@ -1329,10 +1333,15 @@ def admin_order_detail(call):
     if order['first_name']:
         user_info = f"👤 {order['first_name']} {order['username'] or ''} (ID: {order['user_id']})"
     
-    # Рассчитываем цену заказа
-    product_price = order['quantity'] * PRICES.get(order.get('product_id', 'snus1'), 8)
+    # Используем сохраненные цены из заказа
+    total_price = order.get('total_price', 0)
     delivery_price = extract_delivery_price_from_text(order['place'])
-    total_price = product_price + delivery_price
+    if total_price == 0:
+        # Для старых заказов, если total_price не сохранен
+        product_price = order['quantity'] * PRICES.get(order.get('product_id', 'snus1'), 8)
+        total_price = product_price + delivery_price
+    else:
+        product_price = total_price - delivery_price
     delivery_text = "FREE" if delivery_price == 0 else f"{delivery_price}€"
     
     text = f"""
@@ -1904,7 +1913,7 @@ def order_place(call):
         flavors=all_flavors_str.strip(),
         place=place_text,
         quantity=total_quantity,
-        total_price=0
+        total_price=total_price
     )
     
     # Формируем финальное сообщение
@@ -1998,9 +2007,13 @@ def show_personal_cabinet(call):
     confirmed_orders = db.get_user_confirmed_orders(user_id)
     total_amount = 0
     for order in confirmed_orders:
-        product_price = order['quantity'] * PRICES.get(order.get('product_id', 'snus1'), 8)
-        delivery_price = extract_delivery_price_from_text(order['place'])
-        total_amount += product_price + delivery_price
+        order_total = order.get('total_price', 0)
+        if order_total == 0:
+            # Для старых заказов, если total_price не сохранен
+            product_price = order['quantity'] * PRICES.get(order.get('product_id', 'snus1'), 8)
+            delivery_price = extract_delivery_price_from_text(order['place'])
+            order_total = product_price + delivery_price
+        total_amount += order_total
     
     # Формируем текст сообщения
     cabinet_text = f"{get_text(user_id, 'personal_cabinet_title')}\n\n"

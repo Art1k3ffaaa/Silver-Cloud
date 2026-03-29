@@ -2205,4 +2205,25 @@ def handle_order(call):
 
 # ==================== ЗАПУСК ====================
 print("🤖 Бот запущен! Нажмите Ctrl+C для остановки.")
-bot.infinity_polling()
+
+# Проверяем BOT_TOKEN
+try:
+    bot_info = bot.get_me()
+    print(f"✅ BOT_TOKEN валиден! Бот: @{bot_info.username} (ID: {bot_info.id})")
+    print(f"📡 Начинаем polling...")
+except Exception as e:
+    print(f"❌ ОШИБКА: BOT_TOKEN невалиден или проблема с сетью!")
+    print(f"   {e}")
+    print(f"   BOT_TOKEN: {BOT_TOKEN[:20]}...")
+    import sys
+    sys.exit(1)
+
+try:
+    bot.infinity_polling(timeout=30, long_polling_timeout=30)
+except KeyboardInterrupt:
+    print("\n⛔ Бот остановлен")
+except Exception as e:
+    print(f"❌ Ошибка во время polling: {e}")
+    import traceback
+    traceback.print_exc()
+

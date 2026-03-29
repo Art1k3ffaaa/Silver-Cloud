@@ -7,7 +7,11 @@ import os
 from datetime import datetime
 from typing import List, Optional, Dict, Tuple
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "telegram_bot.db")
+# На Railway используем /app, на локальной машине текущая директория
+if os.path.exists("/app"):
+    DB_PATH = "/app/telegram_bot.db"
+else:
+    DB_PATH = os.path.join(os.path.dirname(__file__), "telegram_bot.db")
 
 
 class Database:

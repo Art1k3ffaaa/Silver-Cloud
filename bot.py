@@ -1,6 +1,11 @@
 import os
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+# Восстанавливаем БД перед инициализацией
+from restore_db import restore_database
+restore_database()
+
 from db_main_bot import db
 # ==================== НАСТРОЙКИ ====================
 BOT_TOKEN = os.getenv('BOT_TOKEN') or '8316568148:AAHAeGcxY9ttW3MpjVMZP8URh__2YkJI87M'
